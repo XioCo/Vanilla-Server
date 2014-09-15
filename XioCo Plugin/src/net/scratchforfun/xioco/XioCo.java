@@ -1,14 +1,7 @@
 package net.scratchforfun.xioco;
 
-import java.io.File;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import net.scratchforfun.debugg.Debug;
 import net.scratchforfun.xioco.PlayerInfo.BannedPlayer;
 import net.scratchforfun.xioco.PlayerInfo.BannedPlayer.Reason;
@@ -16,14 +9,8 @@ import net.scratchforfun.xioco.clock.Clock;
 import net.scratchforfun.xioco.clock.Clock.Date;
 import net.scratchforfun.xioco.threads.GodThread;
 import net.scratchforfun.xioco.threads.ThreadTPA;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import no.xioco.commands.HelpOpCommand;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,12 +20,17 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class XioCo extends JavaPlugin{
 
@@ -81,7 +73,7 @@ public class XioCo extends JavaPlugin{
 		
 		// Initializes BlockProtection SQL connections
 		new BlockProtection();
-		
+
 		// Initializes Blacklist
 		new BlockProtection.Blacklist(Configs.blockProtectionBlacklistFile);
 		
@@ -105,8 +97,11 @@ public class XioCo extends JavaPlugin{
 				
 		
 		// Registers the listeners
-		registerListeners();
-		
+        System.out.println("Initialiserer events");
+        registerListeners();
+		//Commands
+        System.out.println("Initialiserer kommandoer");
+        getCommand("helpop").setExecutor(new HelpOpCommand());
 		// Creates the broadcaster
 		//new XioCoBroadcaster();
 		//autoRestart = new AutoRestart(this);
@@ -167,11 +162,11 @@ public class XioCo extends JavaPlugin{
 		PacketPlayOutChat packet = new PacketPlayOutChat(comp, true);
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 	}*/
-	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+	@Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		Debug debug = Debug.start();
 		command:{
-			if(sender instanceof Player){	
+			if(sender instanceof Player){
 				Player player = (Player) sender;
 				PermissionUser user = PermissionsEx.getUser(player);			
 				
@@ -251,47 +246,16 @@ public class XioCo extends JavaPlugin{
 								//Clear all block protections from SQL
 								if(args[1].equalsIgnoreCase("Clear")){
 									blockProtection.clearProtectionTable();
-									player.sendMessage(ChatColor.AQUA + "Beskyttelse på alle blokker fjernet!");
+									player.sendMessage(ChatColor.AQUA + "Beskyttelse pï¿½ alle blokker fjernet!");
 									break command;
 								}
 							}else{
-								sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+								sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 								break command;
 							}
 						}
 					}			
-				}*/if(cmd.getName().equalsIgnoreCase("helpop")){
-					if(args.length > 0){
-						//Make the arguments(all the seperate words) into one string
-						String text = "";
-						for(String arguments : args){
-							text += " " + arguments;
-						}
-						
-						//Creates the string 'helpop' before used multiple times
-						String helpop = ChatColor.RED + "Helpop: " + ChatColor.AQUA + player.getDisplayName() + ":" + text;
-						
-						//Helpop message to the admins
-						for(int i = 0; i < getServer().getOnlinePlayers().length; i++){
-							Player admin = getServer().getOnlinePlayers()[i];
-							if(PermissionsEx.getUser(admin).has("xioco.helpop")){
-								admin.sendMessage(helpop);
-								admin.playSound(admin.getLocation(), Sound.valueOf(Helpop.helpopSound.toUpperCase()), Helpop.volume, Helpop.pitch);
-							}
-						}				
-						
-						//Let's the player know the message is received
-						//player.sendMessage(ChatColor.RED + "Helpop: " + getServer().getOnlinePlayers().length + " vakter har sett meldingen din!");
-						player.sendMessage(helpop);
-						
-						//Saves the helpop message to a file, use /helplist to retrieve the stuff in this file
-						Helpop.writeHelpopToFile(helpop);
-					}else{
-						player.sendMessage(ChatColor.RED + "Bruk /helpop MELDING");
-					}
-					
-					break command;	
-				}else if(cmd.getName().equalsIgnoreCase("helplist")){
+				}*/	if(cmd.getName().equalsIgnoreCase("helplist")){
 					//Needs permission
 					if(user.has("xioco.helpop")){
 						//Grabs all the helpops
@@ -304,7 +268,7 @@ public class XioCo extends JavaPlugin{
 						
 						break command;
 					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+						sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 						break command;
 					}
 				}else if(cmd.getName().equalsIgnoreCase("chat")){
@@ -318,7 +282,7 @@ public class XioCo extends JavaPlugin{
 							break command;
 						}
 					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+						sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 						break command;
 					}
 				}else if(cmd.getName().equalsIgnoreCase("login")){
@@ -332,7 +296,7 @@ public class XioCo extends JavaPlugin{
 						player.sendMessage(ChatColor.GREEN + "Suksess! Loggin notifikasjoner " + (playerInfo.loginInfo.equalsIgnoreCase("true")?"aktivert!":"deaktivert!"));	
 						break command;
 					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+						sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 						break command;
 					}
 				}else if(cmd.getName().equalsIgnoreCase("work")){
@@ -405,10 +369,10 @@ public class XioCo extends JavaPlugin{
 						
 						//Updates the SQL Database
 						playerInfo.writePlayerInfo();
-						player.sendMessage(((playerInfo.inventory==null || !playerInfo.inventory.equals(""))?ChatColor.GREEN+"Du er nå i work!":ChatColor.RED+"Du er nå ute av work!"));	
+						player.sendMessage(((playerInfo.inventory==null || !playerInfo.inventory.equals(""))?ChatColor.GREEN+"Du er nï¿½ i work!":ChatColor.RED+"Du er nï¿½ ute av work!"));	
 						break command;
 					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+						sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 						break command;
 					}
 				}else if(cmd.getName().equalsIgnoreCase("del")){
@@ -454,12 +418,12 @@ public class XioCo extends JavaPlugin{
 								player.sendMessage(ChatColor.GREEN + "Fjernet " + amountOfBlocksRemoved + " blokker!");
 								break command;
 							}else{
-								if(worldEdit == null)player.sendMessage(ChatColor.RED + "WorldEdit er ikke installert på denne serveren! Mener du dette er en feil kontakt staff!");
+								if(worldEdit == null)player.sendMessage(ChatColor.RED + "WorldEdit er ikke installert pï¿½ denne serveren! Mener du dette er en feil kontakt staff!");
 								if(accusedPlayer == null)player.sendMessage(ChatColor.RED + "Det er ingen spiller med dette navnet!");
 							}
 						}					
 					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+						sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 						break command;
 					}
 				}else if(cmd.getName().equalsIgnoreCase("setowner")){
@@ -532,7 +496,7 @@ public class XioCo extends JavaPlugin{
 										break command;
 									}else{
 										// Let's the player know it needs to set points with world edit first
-										player.sendMessage(ChatColor.RED + "Velg to punkter med WorldEdit først.");
+										player.sendMessage(ChatColor.RED + "Velg to punkter med WorldEdit fï¿½rst.");
 									}
 								}else{
 									// Let's the player know if the targeted player does not exist
@@ -576,13 +540,13 @@ public class XioCo extends JavaPlugin{
 										
 										player.sendMessage(ChatColor.GREEN + "Ga " + amountOfBlocksRemoved + " blokker til " + args[0] + "!");
 									}else{
-										player.sendMessage(ChatColor.RED + "Velg to punkter med WorldEdit først.");
+										player.sendMessage(ChatColor.RED + "Velg to punkter med WorldEdit fï¿½rst.");
 									}
 									
 									break command;
 								}*/
 							}else{
-								player.sendMessage(ChatColor.RED + "WorldEdit er ikke installert på denne serveren! Mener du dette er en feil kontakt staff!");
+								player.sendMessage(ChatColor.RED + "WorldEdit er ikke installert pï¿½ denne serveren! Mener du dette er en feil kontakt staff!");
 								break command;
 							}
 						}else{
@@ -590,7 +554,7 @@ public class XioCo extends JavaPlugin{
 							break command;
 						}
 					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+						sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 						break command;
 					}
 				}else if(cmd.getName().equalsIgnoreCase("m") || cmd.getName().equalsIgnoreCase("w")){				
@@ -657,7 +621,7 @@ public class XioCo extends JavaPlugin{
 								player.sendMessage(ChatColor.RED + "Spiller ikke online.");
 							}
 						}else{
-							player.sendMessage(ChatColor.RED + "Du har ingen meldinger å svare på.");
+							player.sendMessage(ChatColor.RED + "Du har ingen meldinger ï¿½ svare pï¿½.");
 						}
 					}else{
 						player.sendMessage(ChatColor.RED + "Bruk /r TEKST");
@@ -665,7 +629,7 @@ public class XioCo extends JavaPlugin{
 					
 					break command;
 				}else if(cmd.getName().equalsIgnoreCase("konto")){				
-					player.sendMessage(ChatColor.GREEN + "Du har " + ChatColor.GOLD + PlayerInfo.getPlayerInfo(player).gull + " gull " + ChatColor.GREEN + "på konto.");
+					player.sendMessage(ChatColor.GREEN + "Du har " + ChatColor.GOLD + PlayerInfo.getPlayerInfo(player).gull + " gull " + ChatColor.GREEN + "pï¿½ konto.");
 					break command;
 				}else if(cmd.getName().equalsIgnoreCase("inn")){	
 					if(args.length == 1){
@@ -681,14 +645,14 @@ public class XioCo extends JavaPlugin{
 						
 						// TODO / HOTFIX: Don't accept values of zero or below.
 						if(antall <= 0) {
-							player.sendMessage(ChatColor.RED + "Du må skrive et litt større tall.");
+							player.sendMessage(ChatColor.RED + "Du mï¿½ skrive et litt stï¿½rre tall.");
 							break command;
 						}
 						
 						boolean enoughItems = player.getInventory().containsAtLeast(new ItemStack(Material.GOLD_INGOT), antall);
 						
 						if(!enoughItems){
-							player.sendMessage(ChatColor.RED + "Du har ikke nok gull-barer på deg.");	
+							player.sendMessage(ChatColor.RED + "Du har ikke nok gull-barer pï¿½ deg.");	
 							break command;
 						}
 						
@@ -697,7 +661,7 @@ public class XioCo extends JavaPlugin{
 						
 						//Updates the SQLe
 						playerInfo.writePlayerInfo();
-						player.sendMessage(ChatColor.GREEN + "Du har satt " + ChatColor.GOLD + antall + " gull " + ChatColor.GREEN + "på konto, og har nå " + ChatColor.GOLD + PlayerInfo.getPlayerInfo(player).gull + " gull " + ChatColor.GREEN + " på konto.");
+						player.sendMessage(ChatColor.GREEN + "Du har satt " + ChatColor.GOLD + antall + " gull " + ChatColor.GREEN + "pï¿½ konto, og har nï¿½ " + ChatColor.GOLD + PlayerInfo.getPlayerInfo(player).gull + " gull " + ChatColor.GREEN + " pï¿½ konto.");
 					}else{
 						player.sendMessage(ChatColor.RED + "Bruk /inn ANTALL");					
 					}
@@ -717,12 +681,12 @@ public class XioCo extends JavaPlugin{
 						
 						// TODO / HOTFIX: Don't accept values of zero or below.
 						if(antall <= 0) {
-							player.sendMessage(ChatColor.RED + "Du må skrive et litt større tall.");
+							player.sendMessage(ChatColor.RED + "Du mï¿½ skrive et litt stï¿½rre tall.");
 							break command;
 						}
 						
 						if(antall > playerInfo.gull){
-							player.sendMessage(ChatColor.RED + "Du har ikke nok gull på konto.");	
+							player.sendMessage(ChatColor.RED + "Du har ikke nok gull pï¿½ konto.");	
 							break command;
 						}
 						
@@ -771,7 +735,7 @@ public class XioCo extends JavaPlugin{
 						}
 						
 						if(antall > playerInfo.gull){
-							player.sendMessage(ChatColor.RED + "Du har ikke nok gull på konto.");	
+							player.sendMessage(ChatColor.RED + "Du har ikke nok gull pï¿½ konto.");	
 							break command;
 						}
 						
@@ -781,11 +745,11 @@ public class XioCo extends JavaPlugin{
 						//Updates the SQL
 						PlayerInfo.writePlayerInfo(playerInfo);
 						PlayerInfo.writePlayerInfo(accusedPlayerInfo);
-						player.sendMessage(ChatColor.GREEN + "Du har overført " + ChatColor.GOLD + antall + " gull " + ChatColor.GREEN + "til " + args[0]);
+						player.sendMessage(ChatColor.GREEN + "Du har overfï¿½rt " + ChatColor.GOLD + antall + " gull " + ChatColor.GREEN + "til " + args[0]);
 						
 						//If player is online
 						if(Bukkit.getPlayer(args[0]) != null){
-							Bukkit.getPlayer(args[0]).sendMessage(ChatColor.GREEN + "Du har fått " + ChatColor.GOLD + antall + " gull " + ChatColor.GREEN + "fra " + player.getName());
+							Bukkit.getPlayer(args[0]).sendMessage(ChatColor.GREEN + "Du har fï¿½tt " + ChatColor.GOLD + antall + " gull " + ChatColor.GREEN + "fra " + player.getName());
 						}
 					}else{
 						player.sendMessage(ChatColor.RED + "Bruk /betal SPILLER ANTALL");						
@@ -800,9 +764,9 @@ public class XioCo extends JavaPlugin{
 						
 						//Updates the SQL
 						playerInfo.writePlayerInfo();
-						player.sendMessage(playerInfo.socialSpy.equals("true")?(ChatColor.GREEN+"Du er nå i SocialSpy!"):(ChatColor.RED+"Du er nå ute av SocialSpy!"));
+						player.sendMessage(playerInfo.socialSpy.equals("true")?(ChatColor.GREEN+"Du er nï¿½ i SocialSpy!"):(ChatColor.RED+"Du er nï¿½ ute av SocialSpy!"));
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");			
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");			
 					}
 					
 					break command;
@@ -812,7 +776,7 @@ public class XioCo extends JavaPlugin{
 						player.getWorld().setSpawnLocation(spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ());
 						player.sendMessage(ChatColor.GREEN + "Nytt spawn satt i verden " + player.getWorld().getName() + "!");
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -838,7 +802,7 @@ public class XioCo extends JavaPlugin{
 							player.sendMessage(ChatColor.RED + "Bruk /tp NAVN | /tp NAVN DITTNAVN");			
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -852,10 +816,10 @@ public class XioCo extends JavaPlugin{
 							if(target != null){
 								if(tpa == null){
 									ThreadTPA.addTPAPlayer(player, target);
-									player.sendMessage(ChatColor.GREEN + "Du har bedt om å teleportere til " + target.getDisplayName());
-									target.sendMessage(ChatColor.GREEN + player.getDisplayName() + " ønsker å teleportere til deg. Skriv " + ChatColor.GOLD + "/tpa " + ChatColor.GREEN + "for å godta (innen 60 sekunder).");
+									player.sendMessage(ChatColor.GREEN + "Du har bedt om ï¿½ teleportere til " + target.getDisplayName());
+									target.sendMessage(ChatColor.GREEN + player.getDisplayName() + " ï¿½nsker ï¿½ teleportere til deg. Skriv " + ChatColor.GOLD + "/tpa " + ChatColor.GREEN + "for ï¿½ godta (innen 60 sekunder).");
 								}else{
-									player.sendMessage(ChatColor.RED + "Denne spilleren har allerede en forespørsel å svare på. vent " + tpa.getTime() + " sekunder.");
+									player.sendMessage(ChatColor.RED + "Denne spilleren har allerede en forespï¿½rsel ï¿½ svare pï¿½. vent " + tpa.getTime() + " sekunder.");
 								}
 							}else{	
 								sender.sendMessage(ChatColor.RED + "Spiller ikke funnet!");
@@ -871,13 +835,13 @@ public class XioCo extends JavaPlugin{
 								
 								player.sendMessage(ChatColor.GREEN + "Du har blitt teleportert til " + requester.getDisplayName()+".");
 							}else{
-								player.sendMessage(ChatColor.RED + "Du har ingen forespørsler. Bruk /tpa NAVN");
+								player.sendMessage(ChatColor.RED + "Du har ingen forespï¿½rsler. Bruk /tpa NAVN");
 							}
 						}else{
 							player.sendMessage(ChatColor.RED + "Bruk /tp NAVN | /tp NAVN DITTNAVN");			
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -899,7 +863,7 @@ public class XioCo extends JavaPlugin{
 							}
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -919,7 +883,7 @@ public class XioCo extends JavaPlugin{
 									player.sendMessage(ChatColor.GREEN+"Hjem 3. "+args[0]+" er satt!");
 								}else{
 									player.sendMessage(ChatColor.RED + "Du har ikke flere ledige hjem.");
-									player.sendMessage(ChatColor.RED + "Slett et hjem med /delhome NAVN eller /delhome 1-3 og prøv igjen.");
+									player.sendMessage(ChatColor.RED + "Slett et hjem med /delhome NAVN eller /delhome 1-3 og prï¿½v igjen.");
 								}
 		
 								info.writePlayerInfo();
@@ -930,7 +894,7 @@ public class XioCo extends JavaPlugin{
 							player.sendMessage(ChatColor.RED + "Bruk /sethome NAVN");	
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -965,14 +929,14 @@ public class XioCo extends JavaPlugin{
 							if(info.home2 != null && !info.home2.equals("")) player.sendMessage(ChatColor.GREEN + "2. " + info.home2);	
 							if(info.home3 != null && !info.home3.equals("")) player.sendMessage(ChatColor.GREEN + "3. " + info.home3);	
 							if((info.home1 == null || info.home1.equals("")) && (info.home2 == null || info.home2.equals("")) && (info.home3 == null || info.home3.equals(""))) player.sendMessage(ChatColor.RED + "Du har ingen hjem.");	
-							player.sendMessage(ChatColor.GREEN + "Bruk "+ChatColor.GOLD+"/home NAVN"+ChatColor.GREEN + " eller "+ChatColor.GOLD+"/home 1-3"+ChatColor.GREEN + ", for å teleportere.");	
-							player.sendMessage(ChatColor.GREEN + "Bruk "+ChatColor.GOLD+"/sethome NAVN"+ChatColor.GREEN + " for å sette et hjem.");	
-							player.sendMessage(ChatColor.RED + "Bruk "+ChatColor.GOLD+"/delhome NAVN"+ChatColor.RED + " eller "+ChatColor.GOLD+"/delhome 1-3"+ChatColor.RED + ", for å fjerne hjem.");	
+							player.sendMessage(ChatColor.GREEN + "Bruk "+ChatColor.GOLD+"/home NAVN"+ChatColor.GREEN + " eller "+ChatColor.GOLD+"/home 1-3"+ChatColor.GREEN + ", for ï¿½ teleportere.");	
+							player.sendMessage(ChatColor.GREEN + "Bruk "+ChatColor.GOLD+"/sethome NAVN"+ChatColor.GREEN + " for ï¿½ sette et hjem.");	
+							player.sendMessage(ChatColor.RED + "Bruk "+ChatColor.GOLD+"/delhome NAVN"+ChatColor.RED + " eller "+ChatColor.GOLD+"/delhome 1-3"+ChatColor.RED + ", for ï¿½ fjerne hjem.");	
 						}
 	
 						info.writePlayerInfo();
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -985,10 +949,10 @@ public class XioCo extends JavaPlugin{
 						if(info.home2 != null && !info.home2.equals("")) player.sendMessage(ChatColor.GREEN + "2. " + info.home2);	
 						if(info.home3 != null && !info.home3.equals("")) player.sendMessage(ChatColor.GREEN + "3. " + info.home3);	
 						if((info.home1 == null || info.home1.equals("")) && (info.home2 == null || info.home2.equals("")) && (info.home3 == null || info.home3.equals(""))) player.sendMessage(ChatColor.RED + "Du har ingen hjem.");	
-						player.sendMessage(ChatColor.GREEN + "Bruk "+ChatColor.GOLD+"/home NAVN"+ChatColor.GREEN + " eller "+ChatColor.GOLD+"/home 1-3"+ChatColor.GREEN + ", for å teleportere.");	
-						player.sendMessage(ChatColor.RED + "Bruk "+ChatColor.GOLD+"/delhome NAVN"+ChatColor.RED + " eller "+ChatColor.GOLD+"/delhome 1-3"+ChatColor.RED + ", for å fjerne hjem.");	
+						player.sendMessage(ChatColor.GREEN + "Bruk "+ChatColor.GOLD+"/home NAVN"+ChatColor.GREEN + " eller "+ChatColor.GOLD+"/home 1-3"+ChatColor.GREEN + ", for ï¿½ teleportere.");	
+						player.sendMessage(ChatColor.RED + "Bruk "+ChatColor.GOLD+"/delhome NAVN"+ChatColor.RED + " eller "+ChatColor.GOLD+"/delhome 1-3"+ChatColor.RED + ", for ï¿½ fjerne hjem.");	
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1012,7 +976,7 @@ public class XioCo extends JavaPlugin{
 	
 						info.writePlayerInfo();
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1020,9 +984,9 @@ public class XioCo extends JavaPlugin{
 					if(user.has("xioco.debug")){
 						if(args.length == 0){
 							if(Debug.update(player.getName())){
-								player.sendMessage(ChatColor.RED + "Du er nå i debug mode.");								
+								player.sendMessage(ChatColor.RED + "Du er nï¿½ i debug mode.");								
 							}else{
-								player.sendMessage(ChatColor.RED + "Du er nå ute av debug mode.");		
+								player.sendMessage(ChatColor.RED + "Du er nï¿½ ute av debug mode.");		
 							}
 						}
 						if(args.length == 2){
@@ -1039,7 +1003,7 @@ public class XioCo extends JavaPlugin{
 							}
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1060,7 +1024,7 @@ public class XioCo extends JavaPlugin{
 							player.sendMessage(ChatColor.RED+"Bruk /tppos X Y Z");
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1110,7 +1074,7 @@ public class XioCo extends JavaPlugin{
 											player.sendMessage(ChatColor.RED + "Denne spilleren finnes ikke.");
 										}
 									}else{
-										player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter. Kontakt gruppe leder.");
+										player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter. Kontakt gruppe leder.");
 									}
 								}else{
 									player.sendMessage(ChatColor.RED + "Du er ikke i noen gruppe.");
@@ -1129,7 +1093,7 @@ public class XioCo extends JavaPlugin{
 											player.sendMessage(ChatColor.RED + "Denne spilleren finnes ikke.");
 										}
 									}else{
-										player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter. Kontakt gruppe leder.");
+										player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter. Kontakt gruppe leder.");
 									}
 								}else{
 									player.sendMessage(ChatColor.RED + "Du er ikke i noen gruppe.");
@@ -1144,7 +1108,7 @@ public class XioCo extends JavaPlugin{
 											Group.createGroup(args[1]);
 											player.sendMessage(ChatColor.GREEN + "Du har laget en gruppe med navn " + args[1] + ".");	
 										}else{
-											player.sendMessage(ChatColor.RED+"Du kan bare bruke bokstaver når du lager grupper.");
+											player.sendMessage(ChatColor.RED+"Du kan bare bruke bokstaver nï¿½r du lager grupper.");
 										}
 									}else{
 										player.sendMessage(ChatColor.RED + "Du er allerede i en gruppe.");									
@@ -1157,7 +1121,7 @@ public class XioCo extends JavaPlugin{
 						
 						info.writePlayerInfo();
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1167,7 +1131,7 @@ public class XioCo extends JavaPlugin{
 							online.hidePlayer(player);
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1180,7 +1144,7 @@ public class XioCo extends JavaPlugin{
 								GodThread.GodPlayer god = GodThread.getGod(player);
 								if(god == null){
 									
-									player.sendMessage(ChatColor.GREEN + "Du er nå i god (" + GodThread.addGod(player, seconds).getTime() + ")");
+									player.sendMessage(ChatColor.GREEN + "Du er nï¿½ i god (" + GodThread.addGod(player, seconds).getTime() + ")");
 								}else{
 									player.sendMessage(ChatColor.RED + "Du er allerede i god (" + god.getTime() + ")");
 								}
@@ -1191,7 +1155,7 @@ public class XioCo extends JavaPlugin{
 							player.sendMessage(ChatColor.RED + "Bruk /god SEKUNDER");
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1254,7 +1218,7 @@ public class XioCo extends JavaPlugin{
 							}
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1273,7 +1237,7 @@ public class XioCo extends JavaPlugin{
 							player.sendMessage(ChatColor.RED + "Bruk /shiftGenerate ANTALL");
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1292,7 +1256,7 @@ public class XioCo extends JavaPlugin{
 							player.sendMessage(ChatColor.RED + "Bruk /shiftFixit ANTALL");
 						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");	
+						player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");	
 					}
 					
 					break command;
@@ -1312,7 +1276,7 @@ public class XioCo extends JavaPlugin{
 										info.group = args[0];
 										info.groupLeder = true;
 										PlayerInfo.Group.createGroup(args[0]);
-										player.sendMessage(ChatColor.GREEN+"Gruppen " + args[0] + " har blitt opprettet. " + ChatColor.RED + "Du deler nå kister og blokker med alle i gruppen.");
+										player.sendMessage(ChatColor.GREEN+"Gruppen " + args[0] + " har blitt opprettet. " + ChatColor.RED + "Du deler nï¿½ kister og blokker med alle i gruppen.");
 									}
 								}else{
 									player.sendMessage(ChatColor.RED + "Gruppen ble ikke opprettet. Ugyldig navn.");
@@ -1339,7 +1303,7 @@ public class XioCo extends JavaPlugin{
 									PlayerInfo accusedPlayer = PlayerInfo.getPlayerInfo(acPlayer);
 									if(accusedPlayer != null){
 										accusedPlayer.groupInvite = info.group;
-										player.sendMessage(ChatColor.GREEN + "Du har blitt invitert til gruppen " + info.group + ". Skriv " + ChatColor.WHITE + "/ggodta " + ChatColor.GREEN + "for å bli med.");
+										player.sendMessage(ChatColor.GREEN + "Du har blitt invitert til gruppen " + info.group + ". Skriv " + ChatColor.WHITE + "/ggodta " + ChatColor.GREEN + "for ï¿½ bli med.");
 									}else{
 										player.sendMessage(ChatColor.RED + "Denne spilleren eksisterer ikke.");
 									}
@@ -1347,7 +1311,7 @@ public class XioCo extends JavaPlugin{
 									player.sendMessage(ChatColor.RED + "Denne spilleren eksisterer ikke.");
 								}
 							}else{
-								player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter. Ta kontakt med en gruppe leder");
+								player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter. Ta kontakt med en gruppe leder");
 							}
 						}else{
 							player.sendMessage(ChatColor.RED + "Bruk /ginv NAVN");
@@ -1366,7 +1330,7 @@ public class XioCo extends JavaPlugin{
 							if(newgroup != null){
 								info.group = info.groupInvite;
 								
-								player.sendMessage(ChatColor.GREEN + "Du er nå i gruppen " + info.groupInvite+".");
+								player.sendMessage(ChatColor.GREEN + "Du er nï¿½ i gruppen " + info.groupInvite+".");
 								info.groupInvite = "";
 							}else{
 								player.sendMessage(ChatColor.RED + "Denne gruppen eksisterer ikke lengre.");
@@ -1402,7 +1366,7 @@ public class XioCo extends JavaPlugin{
 							}
 							
 						}else{
-							player.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter. Ta kontakt med en gruppe leder");
+							player.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter. Ta kontakt med en gruppe leder");
 						}
 					}else{
 						player.sendMessage(ChatColor.RED + "Du er ikke i en gruppe.");
@@ -1458,7 +1422,7 @@ public class XioCo extends JavaPlugin{
 					sender.sendMessage(ChatColor.RED + "Bruk /unban NAVN");
 					break command;
 				}else{
-					sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+					sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 					break command;
 				}			
 			}else if(cmd.getName().equalsIgnoreCase("ban")){
@@ -1516,7 +1480,7 @@ public class XioCo extends JavaPlugin{
 					sender.sendMessage(ChatColor.RED + "Bruk /ban NAVN GRUNN");
 					break command;
 				}else{
-					sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+					sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 					break command;
 				}
 			}else if(cmd.getName().equalsIgnoreCase("kick")){
@@ -1564,7 +1528,7 @@ public class XioCo extends JavaPlugin{
 					sender.sendMessage(ChatColor.RED + "Bruk /kick NAVN GRUNN");
 					break command;
 				}else{
-					sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+					sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 					break command;
 				}
 			}else if(cmd.getName().equalsIgnoreCase("tempban") || cmd.getName().equalsIgnoreCase("temp")){
@@ -1699,12 +1663,12 @@ public class XioCo extends JavaPlugin{
 					sender.sendMessage(ChatColor.RED + "Bruk /tempban NAVN TID(5m4t2d1u) GRUNN | /temp NAVN TID(5m4t2d1u) GRUNN ");
 					break command;
 				}else{
-					sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+					sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 					break command;
 				}
 			}else if(cmd.getName().equalsIgnoreCase("bank")){	
-				sender.sendMessage(ChatColor.WHITE + "/konto " + ChatColor.GREEN + "- Se hvor mye du har på konto.");
-				sender.sendMessage(ChatColor.WHITE + "/inn ANTALL " + ChatColor.GREEN + "- Sett gull inn på konto.");
+				sender.sendMessage(ChatColor.WHITE + "/konto " + ChatColor.GREEN + "- Se hvor mye du har pï¿½ konto.");
+				sender.sendMessage(ChatColor.WHITE + "/inn ANTALL " + ChatColor.GREEN + "- Sett gull inn pï¿½ konto.");
 				sender.sendMessage(ChatColor.WHITE + "/ut ANTALL " + ChatColor.GREEN + "- Ta ut gull fra konto.");
 				sender.sendMessage(ChatColor.WHITE + "/banktopp " + ChatColor.GREEN + "- Se hvem som er rikest.");
 				break command;
@@ -1752,7 +1716,7 @@ public class XioCo extends JavaPlugin{
 					sender.sendMessage(ChatColor.RED + "Bruk /gull BRUKER ANTALL");
 					break command;
 				}else{
-					sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
+					sender.sendMessage(ChatColor.RED + "Du har ikke nï¿½dvendige rettigheter!");
 					break command;
 				}
 			}else if(cmd.getName().equalsIgnoreCase("cleartable")){
