@@ -1,0 +1,139 @@
+name: XioCo
+main: net.scratchforfun.xioco.XioCo
+version: 1.1
+commands:
+   XioCo:
+      description: All XioCo plugin commands start with XioCo
+      usage: /<command>
+   helpop:
+      description: Fa hjelp fra dine favoritt vakter!
+      usage: /<command> TEKST
+   helplist:
+      description: Henter de 10 siste helpop meldingene!
+      usage: /<command>
+   chat:
+      description: Chat commands!
+      usage: /<command> [tekst]
+   login:
+      description: Skrur loggin notifikasjoner av eller pa!
+      usage: /<command>
+   work:
+      description: Skrur work-mode av eller pa!
+      usage: /<command>
+   restart:
+      description: Restart serveren!
+      usage: /<command>
+   del:
+      description: Bruk tre-oks fra WorldEdit og slett beskyttelse innenfor spesifisert omrade!
+      usage: /<command> NAVN
+   kick:
+      description: Kicker spillere!
+      usage: /<command> NAVN GRUNN
+   ban:
+      description: Bans a player!
+      usage: /<command> NAVN GRUNN
+   unban:
+      description: Unbans a player!
+      usage: /<command> NAVN
+   tempban:
+      description: Temporary bans a player!
+      usage: /<command> NAVN TID
+   temp:
+      description: Temporary bans a player!
+      usage: /<command> NAVN TID
+   setowner:
+      description: Sets the owner of a selected boundary using wooden axe tool!
+      usage: /<command> OWNER
+   m:
+      description: Sender melding til spesifisert bruker!
+      usage: /<command> NAVN TEKST
+   w:
+      description: Sender melding til spesifisert bruker!
+      usage: /<command> NAVN TEKST
+   r:
+      description: Sender melding til spesifisert bruker!
+      usage: /<command> NAVN TEKST
+   konto:
+      description: Sjekker hvor mye gull en bruker har pa konto
+      usage: /<command>
+   inn:
+      description: Setter inn gull-barer pa konto
+      usage: /<command> ANTALL
+   ut:
+      description: Tar ut gull-barer fra konto
+      usage: /<command> ANTALL
+   banktopp:
+      description: Viser hvem som har mest gull pa serveren
+      usage: /<command>
+   bank:
+      description: Viser en liste over alle kommandoer
+      usage: /<command> ANTALL
+   gull:
+      description: Brukes kun av stab for a manipulere antall gull pa en konto
+      usage: /<command> ANTALL
+   socialspy:
+      description: Skru socialspy av eller pa
+      usage: /<command>
+   reg:
+      description: Registrer deg som bruker
+      usage: /<command>  
+   green:
+      description: Brukes for a svare pa registrasjons sporsmalene
+      usage: /<command>
+   red:
+      description: Brukes for a svare pa registrasjons sporsmalene
+      usage: /<command>   
+   setspawn:
+      description: Brukes for a sette spawn i en verden
+      usage: /<command>  
+   spawn:
+      description: Teleporter til spawn
+      usage: /<command>  
+   c:
+      description: Send meldinger i adminchat
+      usage: /<command>  
+   sethome:
+      description: Lagrer posisjonen til 1-3 av dine valgte hjem
+      usage: /<command>  
+   home:
+      description: Teleporterer deg til valgt hjem
+      usage: /<command>  
+   homes:
+      description: Viser alle hjemmene
+      usage: /<command>  
+   delhome:
+      description: Fjerner spesifisert hjem
+      usage: /<command>  
+   tp:
+      description: Teleporter til en annen spiller
+      usage: /<command>  
+   tpa:
+      description: Spor om adgang til a teleportere til spiller
+      usage: /<command>  
+   cleartable:
+      description: Clears a table
+      usage: /<command>
+   debug:
+      description: ...
+      usage: /<command>  
+   gruppe:
+      description: Lag en gruppe
+      usage: /<command>
+   tppos:
+      description: Teleporter til en posisjon
+      usage: /<command>
+   hide:
+      description: Hide the user
+      usage: /<command>
+   god:
+      description: Setter spilleren i god mode
+      usage: /<command>
+   fixit:
+      description: Fikser SQL stuff
+      usage: /<command>
+   shiftGenerate:
+      description: flytter og fikser terrenget
+      usage: /<command>
+   shiftFixit:
+      description: flytter og fikser terrenget
+      usage: /<command>
