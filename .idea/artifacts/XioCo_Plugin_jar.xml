@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="XioCo Plugin:jar">
+    <output-path>$USER_HOME$/Desktop/Main server/plugins</output-path>
+    <root id="archive" name="XioCo Plugin.jar">
+      <element id="module-output" name="XioCo Plugin" />
+      <element id="file-copy" path="$PROJECT_DIR$/XioCo Plugin/plugin.yml" />
+    </root>
+  </artifact>
+</component>
