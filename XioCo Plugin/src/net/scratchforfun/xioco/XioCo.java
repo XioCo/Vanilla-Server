@@ -1683,43 +1683,6 @@ public class XioCo extends JavaPlugin{
 					
 					thread.start();
 				}
-			}else if(cmd.getName().equalsIgnoreCase("blast")){
-				boolean permission = false;
-				
-				if(sender instanceof Player){
-					PermissionUser user = PermissionsEx.getUser((Player)sender);
-					permission = user.has("xioco.cleartable");
-				}else{
-					permission = true;
-				}
-				
-				if(permission && false){
-					SQLConnection.openConnection(false);
-					Debug debug2 = Debug.start();
-								
-					try {
-						PreparedStatement stmt = SQLConnection.connection.prepareStatement("INSERT INTO `" + BlockProtection.tableName + "` values(?,?,?,?,?,?,?,?,?);");
-					
-						for(int i = 0; i < 100000; i++){
-							stmt.setInt(1, 0);
-							stmt.setString(2, "FAKE");
-							stmt.setInt(3, 0);
-							stmt.setInt(4, 0);
-							stmt.setInt(5, 0);
-							stmt.setString(6, "FAKE");
-							stmt.setString(7, "FAKE");
-							stmt.setString(8, "FAKE");
-							stmt.setString(9, "FAKE");
-							stmt.execute();
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-							
-					debug2.print(ChatColor.AQUA+"Insert100000: ");
-				}else{
-					sender.sendMessage(ChatColor.RED+"Kappa");
-				}
 			}
 		}
 		
