@@ -9,10 +9,8 @@ import net.scratchforfun.xioco.clock.Clock;
 import net.scratchforfun.xioco.clock.Clock.Date;
 import net.scratchforfun.xioco.threads.GodThread;
 import net.scratchforfun.xioco.threads.ThreadTPA;
-import no.xioco.commands.ChatCommand;
-import no.xioco.commands.HelpListCommand;
-import no.xioco.commands.HelpOpCommand;
-import no.xioco.commands.OpenInvCommand;
+import no.xioco.commands.*;
+import no.xioco.listeners.BlockListener;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -108,7 +106,8 @@ public class XioCo extends JavaPlugin{
         getCommand("helplist").setExecutor(new HelpListCommand(this));
         getCommand("chat").setExecutor(new ChatCommand(this));
         getCommand("open").setExecutor(new OpenInvCommand());
-		// Creates the broadcaster
+        getCommand("c").setExecutor(new StabchatCommand());
+        // Creates the broadcaster
 		//new XioCoBroadcaster();
 		//autoRestart = new AutoRestart(this);
 		//guestReminder.thread.start();
@@ -740,24 +739,7 @@ public class XioCo extends JavaPlugin{
 					player.sendMessage("Teleporting...");
 					
 					break command;
-				}else if(cmd.getName().equalsIgnoreCase("c")){	
-					if(user.has("xioco.adminchat")){
-						String text = ChatColor.GOLD+"[StabChat] "+ChatColor.WHITE+player.getDisplayName()+":";
-						for(String string : args){
-							text += " "+string;
-						}
-						
-						for(Player online : Bukkit.getOnlinePlayers()){
-							if(PermissionsEx.getUser(online).has("xioco.adminchat")){
-								online.sendMessage(text);
-							}
-						}
-					}else{
-						player.sendMessage(ChatColor.RED + "Du har ikke n�dvendige rettigheter!");	
-					}
-					
-					break command;
-				}else if(cmd.getName().equalsIgnoreCase("sethome")){	
+				}else if(cmd.getName().equalsIgnoreCase("sethome")){
 					if(user.has("xioco.home")){
 						if(args.length == 1){
 							if(args[0].matches("[a-zA-Z0-9]+")){
