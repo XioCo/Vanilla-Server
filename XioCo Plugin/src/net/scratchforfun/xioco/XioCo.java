@@ -9,7 +9,10 @@ import net.scratchforfun.xioco.clock.Clock;
 import net.scratchforfun.xioco.clock.Clock.Date;
 import net.scratchforfun.xioco.threads.GodThread;
 import net.scratchforfun.xioco.threads.ThreadTPA;
+import no.xioco.commands.ChatCommand;
+import no.xioco.commands.HelpListCommand;
 import no.xioco.commands.HelpOpCommand;
+import no.xioco.commands.OpenInvCommand;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -44,7 +47,7 @@ public class XioCo extends JavaPlugin{
 	
 	private ThreadTPA threadTPA;
 	private GodThread threadGod;
-	
+	XioCo plugin;
 	//public AutoRestart autoRestart;
 	
 	public static String adminShopPassword;
@@ -102,6 +105,9 @@ public class XioCo extends JavaPlugin{
 		//Commands
         System.out.println("Initialiserer kommandoer");
         getCommand("helpop").setExecutor(new HelpOpCommand());
+        getCommand("helplist").setExecutor(new HelpListCommand(this));
+        getCommand("chat").setExecutor(new ChatCommand(this));
+        getCommand("open").setExecutor(new OpenInvCommand());
 		// Creates the broadcaster
 		//new XioCoBroadcaster();
 		//autoRestart = new AutoRestart(this);
@@ -168,124 +174,8 @@ public class XioCo extends JavaPlugin{
 		command:{
 			if(sender instanceof Player){
 				Player player = (Player) sender;
-				PermissionUser user = PermissionsEx.getUser(player);			
-				
-				//The Players UUID || Used for testing
-				//this.logger.info(player.getDisplayName() + " --> UUID - " + player.getUniqueId());
-				
-				//Unused
-				
-				/*if(cmd.getName().equalsIgnoreCase("reg")){	
-					//Needs to be in group 'gjest'
-					if(user.inGroup("gjest")){
-						new Registration(player.getUniqueId().toString());
-						RegStatus status = Registration.getRegistrator(player.getUniqueId().toString());
-						
-						status.setRandomQuestion();	
-						
-						askQuestion(player, Configs.getValues(Configs.greylistQuestionsFile, status.question+"")[1]);
-					}else{
-						player.sendMessage(ChatColor.RED + "Du er allerede registrert.");
-					}
-					
-					break command;		
-				}if(cmd.getName().equalsIgnoreCase("green")){	//JA
-					//Needs to be in group 'gjest'
-					if(user.inGroup("gjest")){
-						RegStatus status = Registration.getRegistrator(player.getUniqueId().toString());
-						
-						if(status == null){
-							break command;
-						};
-						
-						//If 'Ja' is correct or not
-						if(Configs.getValues(Configs.greylistQuestionsFile, status.question+"")[2].equalsIgnoreCase("ja")){
-							status.correct++;
-							player.sendMessage(ChatColor.GREEN + "Riktig! " + status.correct + " av 10 korrekt!");
-						}else{
-							player.sendMessage(ChatColor.RED + "Feil! " + status.correct + " av 10 korrekt!");
-						}
-	
-						//Update the registration
-						Registration.updateRegistration(player, status);
-					}else{
-						player.sendMessage(ChatColor.RED + "Du er allerede registrert.");
-					}
-					
-					break command;
-				}if(cmd.getName().equalsIgnoreCase("red")){	//NEI
-					//Needs to be in group 'gjest'
-					if(user.inGroup("gjest")){
-						RegStatus status = Registration.getRegistrator(player.getUniqueId().toString());
-						
-						if(status == null){
-							break command;
-						};
-						
-						//If 'Ja' is correct or not
-						if(Configs.getValues(Configs.greylistQuestionsFile, status.question+"")[2].equalsIgnoreCase("nei")){
-							status.correct++;
-							player.sendMessage(ChatColor.GREEN + "Riktig! " + status.correct + " av 10 korrekt!");
-						}else{
-							player.sendMessage(ChatColor.RED + "Feil! " + status.correct + " av 10 korrekt!");
-						}
-	
-						//Update the registration
-						Registration.updateRegistration(player, status);
-					}else{
-						player.sendMessage(ChatColor.RED + "Du er allerede registrert.");
-					}
-					
-					break command;
-				}*if(cmd.getName().equalsIgnoreCase("XioCo")){	
-					if(args.length >= 2){
-						//BlockProtection Plugin
-						if(args[0].equalsIgnoreCase("BlockProtection")){
-							//Needs permission
-							if(user.has("xioco.purge")){
-								//Clear all block protections from SQL
-								if(args[1].equalsIgnoreCase("Clear")){
-									blockProtection.clearProtectionTable();
-									player.sendMessage(ChatColor.AQUA + "Beskyttelse p� alle blokker fjernet!");
-									break command;
-								}
-							}else{
-								sender.sendMessage(ChatColor.RED + "Du har ikke n�dvendige rettigheter!");
-								break command;
-							}
-						}
-					}			
-				}*/	if(cmd.getName().equalsIgnoreCase("helplist")){
-					//Needs permission
-					if(user.has("xioco.helpop")){
-						//Grabs all the helpops
-						for(String helpop : Helpop.getHelplist()){
-							if(helpop != null){
-								//Let's the player know the message is received
-								player.sendMessage(ChatColor.RED + helpop);
-							}
-						}
-						
-						break command;
-					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke n�dvendige rettigheter!");
-						break command;
-					}
-				}else if(cmd.getName().equalsIgnoreCase("chat")){
-					//Needs permission
-					if(user.has("xioco.chat")){
-						if(args.length == 1 && args[0].equalsIgnoreCase("clear")){
-							for(int i = 0; i < 100; i++){
-								getServer().broadcastMessage(" ");
-							}
-							
-							break command;
-						}
-					}else{
-						sender.sendMessage(ChatColor.RED + "Du har ikke n�dvendige rettigheter!");
-						break command;
-					}
-				}else if(cmd.getName().equalsIgnoreCase("login")){
+				PermissionUser user = PermissionsEx.getUser(player);
+    if(cmd.getName().equalsIgnoreCase("login")){
 					//Needs permission
 					if(user.has("xioco.login")){
 						PlayerInfo playerInfo = PlayerInfo.getPlayerInfo(player);

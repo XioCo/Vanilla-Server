@@ -137,3 +137,6 @@ commands:
    shiftFixit:
       description: flytter og fikser terrenget
       usage: /<command>
+   open:
+      description: Apner inventory, enten enderchest eller vanlig
+      usage: /<command>
