@@ -35,9 +35,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-/**
- * Created by jimbo8 on 16.09.2014.
- */
 public class BlockListener implements Listener {
 
     @EventHandler
