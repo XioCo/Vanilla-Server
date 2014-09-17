@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Created by jimbo8 on 15.09.2014.
+ * Created by scratchforfun on 15.09.2014.
  */
 public class ChatCommand implements CommandExecutor{
 
@@ -20,10 +20,12 @@ public class ChatCommand implements CommandExecutor{
     }
     @Override
 public boolean onCommand(CommandSender sender, Command cmd, String cmdl, String[] args) {
-    if(sender instanceof Player) {
+    
         if (cmd.getName().equalsIgnoreCase("chat")) {
+            if(sender instanceof Player) {
+            Player player = (Player) sender;
             //Needs permission
-            if (sender.hasPermission("xioco.chat")) {
+            if (player.hasPermission("xioco.chat")) {
                 if (args.length == 1 && args[0].equalsIgnoreCase("clear")) {
                     for (int i = 0; i < 100; i++) {
                         Bukkit.broadcastMessage(" ");
@@ -32,9 +34,9 @@ public boolean onCommand(CommandSender sender, Command cmd, String cmdl, String[
             } else {
                 sender.sendMessage(ChatColor.RED + "Du har ikke nødvendige rettigheter!");
             }
-        }
-    }else{
+        }else{
         sender.sendMessage("Du ma vere ingame for a bruke denne kommandoen!");
+        }
     }
     return false;
 }
