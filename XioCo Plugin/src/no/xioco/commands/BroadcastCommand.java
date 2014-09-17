@@ -16,7 +16,7 @@ public class BroadcastCommand implements CommandExecutor {
         if(cmd.getName().equalsIgnoreCase("bc") || cmd.getName().equalsIgnoreCase("broadcast")){
             if(sender instanceof Player) {
                 Player player = (Player) sender;
-                if(player.hasPermission("")) {
+                if(player.hasPermission("xioco.broadcast")) {
                     if (args.length > 1) {
                         //Creates the StringBuilder
                         StringBuilder sb = new StringBuilder();
