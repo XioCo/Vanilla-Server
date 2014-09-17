@@ -107,6 +107,8 @@ public class XioCo extends JavaPlugin{
         getCommand("chat").setExecutor(new ChatCommand(this));
         getCommand("open").setExecutor(new OpenInvCommand());
         getCommand("c").setExecutor(new StabchatCommand());
+        getCommand("bc").setExecutor(new BroadcastCommand());
+        getCommand("broadcast").setExecutor(new BroadcastCommand());
         // Creates the broadcaster
 		//new XioCoBroadcaster();
 		//autoRestart = new AutoRestart(this);

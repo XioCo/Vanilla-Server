@@ -140,3 +140,9 @@ commands:
    open:
       description: Apner inventory, enten enderchest eller vanlig
       usage: /<command>
+   bc:
+      description: Sender melding til alle.
+      usage: /<command>
+   broadcast:
+      description: Sender melding til alle.
+      usage: /<command>
