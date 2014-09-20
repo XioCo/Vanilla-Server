@@ -1283,9 +1283,7 @@ public class XioCo extends JavaPlugin{
 							reason.editDate = creationDate;
 							bannedPlayer.writeUnban(reason);
 							
-							for(Player player : Bukkit.getOnlinePlayers()){
-								if(PermissionsEx.getUser(player).has("xioco.unban")) player.sendMessage(ChatColor.GOLD + sender.getName() + ChatColor.GREEN + " ubannet " + ChatColor.GOLD + args[0] + ChatColor.GREEN + "!");
-							}
+							Bukkit.broadcastMessage(ChatColor.GOLD + sender.getName() + ChatColor.GREEN + " unbannet " + ChatColor.GOLD + args[0] + ChatColor.GREEN + "!");
 							break command;
 						}else{
 							sender.sendMessage(ChatColor.RED + "Spiller ikke funnet!");
@@ -1333,9 +1331,7 @@ public class XioCo extends JavaPlugin{
 							if(bannedPlayer.getStatus().allowed){
 								Reason b_reason = new PlayerInfo.BannedPlayer.Reason(UUID, PlayerInfo.BannedPlayer.Reason.Type.BAN, reason, reason, BannedPlayer.getAuthor(sender), BannedPlayer.getTime(), "", "");
 								
-								for(Player online : Bukkit.getOnlinePlayers()){
-									if(PermissionsEx.getUser(online).has("xioco.ban")) online.sendMessage(ChatColor.GOLD + sender.getName() + ChatColor.GREEN + " bannet " + ChatColor.GOLD + args[0] + ChatColor.GREEN + " for " + reason);
-								}
+								Bukkit.broadcastMessage(ChatColor.GOLD + sender.getName() + ChatColor.GREEN + " bannet " + ChatColor.GOLD + args[0] + ChatColor.GREEN + " for " + reason);
 								
 								bannedPlayer.writeBan(b_reason);
 								
