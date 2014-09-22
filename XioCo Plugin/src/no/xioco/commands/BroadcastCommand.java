@@ -33,7 +33,7 @@ public class BroadcastCommand implements CommandExecutor {
                                 break;
                             case "tips":
                                 //broadcasts message
-                                Bukkit.broadcastMessage("(" + ChatColor.GREEN + "Tips" + ChatColor.RESET + ") " + ChatColor.WHITE + sb.toString());
+                                Bukkit.broadcastMessage("(" + ChatColor.GREEN + "Tips" + ChatColor.RESET + ") " + sb.toString());
                                 break;
                             default:
                                 player.sendMessage(ChatColor.RED + "Feil subkommando! Bruk /bc <Viktig/tips> [melding]");
