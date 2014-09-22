@@ -38,7 +38,9 @@ public class PermissionPlayer {
 					// You do not own this block
 					
 					// Are you in the same group as the protector?
-					if(Group.inSameGroup(playerUUID, protectedUUID)){
+					if(Group.inSameGroup(
+                            playerUUID,
+                            protectedUUID)){
 						// You are in the same group as the owner
 						return true;
 					}else{

@@ -13,7 +13,16 @@ public class ProtectedBlock {
 	public String clock;//hh:mm
 	public String plasert;//true/false  <-- Not sure why this is not a boolean :/ SQL stuff
 	public String blockName;//The block name
-	
+
+    public ProtectedBlock(int id, String UUID, int x, int y, int z, String plasert){
+        this.id = id;
+        this.UUID = UUID;
+        this.plasert = plasert;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
 	public ProtectedBlock(int id, String UUID, int x, int y, int z, String plasert, String blockName){
 		this.id = id;
 		this.UUID = UUID;

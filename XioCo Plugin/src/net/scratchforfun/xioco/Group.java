@@ -1,12 +1,11 @@
 package net.scratchforfun.xioco;
 
+import net.scratchforfun.debugg.Debug;
+import org.bukkit.ChatColor;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import net.scratchforfun.debugg.Debug;
-
-import org.bukkit.ChatColor;
 
 public class Group {
 
@@ -82,17 +81,16 @@ public class Group {
 
 	public static boolean inSameGroup(String breaker, String owner) {
 		// If you're not in a group, just return false
-		if(getGroup(breaker).equals("")) return false;
-
+		if(getGroup(breaker) == null || getGroup(breaker).equalsIgnoreCase("")) return false;
 		// If the owner is not in a group, just return false
-		if(getGroup(owner).equals("")) return false;
+		if(getGroup(owner) == null || getGroup(owner).equals("")) return false;
 		
 		// Return true if the players are in the same group
 		return getGroup(breaker).equals(getGroup(owner));
 	}
 	
 	public static boolean legalCharacters(String text){
-		return text.matches("[a-zA-ZæøåÆØÅ]+");
+		return text.matches("[a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+");
 	}
 	
 }

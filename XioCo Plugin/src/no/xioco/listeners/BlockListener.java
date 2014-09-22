@@ -37,7 +37,7 @@ import java.util.List;
 
 public class BlockListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockChange(BlockFromToEvent event){
         if(!event.getToBlock().isLiquid() && event.getToBlock().getType() != Material.AIR) {
             event.setCancelled(true);
@@ -326,9 +326,11 @@ public class BlockListener implements Listener {
     // REWAMPED
     @EventHandler(ignoreCancelled = true)
     public void onDispenseItem(BlockDispenseEvent e){
+        Bukkit.broadcastMessage("1");
         // Checks if the dispensed item is a banned item
-        if(e.getItem().getType().equals(Material.LAVA_BUCKET) || e.getItem().getType().equals(Material.WATER_BUCKET) || e.getItem().getType().equals(Material.FLINT_AND_STEEL) || e.getItem().getType().equals(Material.FIREBALL)){
+        if(e.getItem().getType() == Material.LAVA_BUCKET || e.getItem().getType() == Material.WATER_BUCKET || e.getItem().getType() == Material.FLINT_AND_STEEL || e.getItem().getType() == Material.FIREBALL){
             // Cancels it
+            Bukkit.broadcastMessage("2");
             e.setCancelled(true);
         }
     }
@@ -668,10 +670,8 @@ public class BlockListener implements Listener {
 
         // Grabs the player instance
         Player player = e.getPlayer();
-
         // Grabs the desired permission profile from desired player
         PermissionPlayer perm = new PermissionPlayer(player);
-
         // Makes sure you are not a guest
         if(perm.has(Permission.XIOCO_GUEST)){
             // Grabs the block in question
@@ -710,7 +710,7 @@ public class BlockListener implements Listener {
 
                 // Makes sure you have the permission
                 if(perm.hasGroupPermission(UUID)){
-                    // Makes sure you're not using the adminstick
+                    // Makes sure you're not usinthe adminstick
                     if(!player.getItemInHand().equals(WorkMode.ADMINSTICK))
                         // Updates the protection
                         BlockProtection.updateProtection(player, false, e.getBlock());
