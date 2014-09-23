@@ -326,11 +326,9 @@ public class BlockListener implements Listener {
     // REWAMPED
     @EventHandler(ignoreCancelled = true)
     public void onDispenseItem(BlockDispenseEvent e){
-        Bukkit.broadcastMessage("1");
         // Checks if the dispensed item is a banned item
         if(e.getItem().getType() == Material.LAVA_BUCKET || e.getItem().getType() == Material.WATER_BUCKET || e.getItem().getType() == Material.FLINT_AND_STEEL || e.getItem().getType() == Material.FIREBALL){
             // Cancels it
-            Bukkit.broadcastMessage("2");
             e.setCancelled(true);
         }
     }
